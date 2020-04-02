@@ -38,7 +38,7 @@ public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessi
             return null;
         }
 
-        String header = httpServletRequest.getHeader("Authorisation");
+        String header = httpServletRequest.getHeader("Authorization");
 //		System.out.println("filter called....");
         if (header == null || !header.startsWith("Token ")) {
             throw new RuntimeException(
