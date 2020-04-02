@@ -11,8 +11,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EntityScan("com.realtion.human.entity")
-@EnableJpaRepositories(basePackages = {"com.relation.human.repository"})
-@ComponentScan(basePackages = {"com.relation.*"})
+@EnableJpaRepositories(basePackages = {"com.realtion.human.repository"})
+@ComponentScan(basePackages = {"com.realtion.*"})
 @SpringBootApplication
 public class HumanApplication {
 
@@ -33,7 +33,7 @@ public class HumanApplication {
     }
 
     @Bean
-    Response response() {
+    Response getResponse() {
 		return new Response();
     }
 }
