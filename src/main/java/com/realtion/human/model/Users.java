@@ -14,207 +14,186 @@ import java.util.Date;
 @Table(name = "Users")
 public class Users implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue
-	private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	@Column
-	private String image;
+    @Column
+    private String image;
 
-	@Column(unique = true)
-	private String mobile;
+    @Column(unique = true)
+    private String mobile;
 
-	@Email
-	@Column(unique = true)
-	private String email;
+    @Email
+    @Column(unique = true)
+    private String email;
 
-	@NotNull
-	@NotEmpty
-	@Column
-	private String password;
+    @NotNull
+    @NotEmpty
+    @Column
+    private String password;
 
-	@Column
-	private String status;
+    @Column
+    private String status;
 
-	@NotNull
-	@Column
-	private String name;
+    @NotNull
+    @Column
+    private String name;
 
-	@NotNull
-	@Column
-	private String gender;
+    @NotNull
+    @Column
+    private String gender;
 
-	@Past
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@Column
-	private Date dob;
+    @Past
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column
+    private Date dob;
 
-	@Column
-	private String address_1;
+    @Column
+    private String address;
 
-	@Column
-	private String address_2;
+    @Column
+    private String city;
 
-	@Column
-	private String city;
+    @Column
+    private String state;
 
-	private String custom_details;
+    @Column
+    private String country;
 
-	@Column
-	private String state;
+    @Column
+    private Long pin;
 
-	@Column
-	private String country;
-
-	@Column
-	private Long pin;
-
-	@Column
-	private String userImage;
+    @Column
+    private String userImage;
 
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getImage() {
-		return image;
-	}
+    public String getImage() {
+        return image;
+    }
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+    public void setImage(String image) {
+        this.image = image;
+    }
 
-	public String getMobile() {
-		return mobile;
-	}
+    public String getMobile() {
+        return mobile;
+    }
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getGender() {
-		return gender;
-	}
+    public String getGender() {
+        return gender;
+    }
 
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
-	public Date getDob() {
-		return dob;
-	}
+    public Date getDob() {
+        return dob;
+    }
 
-	public void setDob(Date dob) {
-		this.dob = dob;
-	}
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
 
-	public String getAddress_1() {
-		return address_1;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public void setAddress_1(String address_1) {
-		this.address_1 = address_1;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public String getAddress_2() {
-		return address_2;
-	}
+    public String getCity() {
+        return city;
+    }
 
-	public void setAddress_2(String address_2) {
-		this.address_2 = address_2;
-	}
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public String getState() {
+        return state;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public void setState(String state) {
+        this.state = state;
+    }
 
-	public String getCustom_details() {
-		return custom_details;
-	}
+    public String getCountry() {
+        return country;
+    }
 
-	public void setCustom_details(String custom_details) {
-		this.custom_details = custom_details;
-	}
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-	public String getState() {
-		return state;
-	}
+    public Long getPin() {
+        return pin;
+    }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+    public void setPin(Long pin) {
+        this.pin = pin;
+    }
 
-	public String getCountry() {
-		return country;
-	}
+    public String getUserImage() {
+        return userImage;
+    }
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public Long getPin() {
-		return pin;
-	}
-
-	public void setPin(Long pin) {
-		this.pin = pin;
-	}
-
-	public String getUserImage() {
-		return userImage;
-	}
-
-	public void setUserImage(String userImage) {
-		this.userImage = userImage;
-	}
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
 }
