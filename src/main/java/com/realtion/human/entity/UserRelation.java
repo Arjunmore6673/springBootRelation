@@ -1,4 +1,4 @@
-package com.realtion.human.model;
+package com.realtion.human.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

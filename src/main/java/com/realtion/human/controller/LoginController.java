@@ -19,20 +19,14 @@ import java.util.HashMap;
 public class LoginController {
 
     @Autowired
-    LoginService loginService;
+    private LoginService loginService;
 
     @Autowired
     private UserRepository userRepository;
 
     @PostMapping
-    ResponseEntity<HashMap<String, String>> login(@Valid @RequestBody LoginForm loginForm) {
-
-        String username = loginForm.getUsername();
-        String password = loginForm.getPassword();
-        String data = loginService.getToken(username, password);
-        HashMap<String, String> tokenMap = new HashMap<>();
-        tokenMap.put("token", data);
-        return ResponseEntity.ok().body(tokenMap);
+    ResponseEntity<HashMap<String, Object>> login(@Valid @RequestBody LoginForm loginForm) {
+        return loginService.getToken(loginForm.getUsername(), loginForm.getPassword());
     }
 
 }

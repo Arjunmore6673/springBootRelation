@@ -1,6 +1,6 @@
 package com.realtion.human.repository;
 
-import com.realtion.human.model.Users;
+import com.realtion.human.entity.Users;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

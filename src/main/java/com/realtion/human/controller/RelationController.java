@@ -21,7 +21,7 @@ public class RelationController {
         eventsService.getEvents(communityId, searchName);
     }
 
-    @GetMapping(GlobalConstant.EVENT_LISTS)
+    @GetMapping("dss")
     public Response listEvents2(@RequestParam(name = "communityId", required = true) Long communityId, @RequestParam(name = "searchName", required = false) String searchName) {
         return eventsService.getEvents2(communityId, searchName);
     }

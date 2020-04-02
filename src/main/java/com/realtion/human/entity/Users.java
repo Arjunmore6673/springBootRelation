@@ -1,4 +1,4 @@
-package com.realtion.human.model;
+package com.realtion.human.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sun.istack.NotNull;
@@ -11,12 +11,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class Users implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     @Id
