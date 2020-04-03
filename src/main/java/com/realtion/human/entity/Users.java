@@ -68,21 +68,12 @@ public class Users implements Serializable {
     @Column
     private Long pin;
 
-    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @Column
+    private String code;
+
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER,cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JsonManagedReference(value = "user_relation")
     private List<UserRelation> userRelation;
-
-    @OneToMany(mappedBy = "users2", fetch = FetchType.LAZY)
-    @JsonManagedReference(value = "user_relation2")
-    private List<UserRelation> userRelation2;
-
-    public List<UserRelation> getUserRelation2() {
-        return userRelation2;
-    }
-
-    public void setUserRelation2(List<UserRelation> userRelation2) {
-        this.userRelation2 = userRelation2;
-    }
 
     public List<UserRelation> getUserRelation() {
         return userRelation;
@@ -204,4 +195,11 @@ public class Users implements Serializable {
         this.pin = pin;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }

@@ -18,6 +18,8 @@ public interface UserRepository extends CrudRepository<Users, Long> {
 	Users findByEmail(String email);
 
 	Users findByMobile(String mobile);
+
+    Users findByCode(String code);
 //
 //	@Query(value = "SELECT new com.wetech.community.dto.MemberListDto(id,image,email,name,city) FROM  Users ")
 //	List<MemberListDto> getMemberList();

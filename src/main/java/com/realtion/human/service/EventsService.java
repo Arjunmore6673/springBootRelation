@@ -61,4 +61,8 @@ public class EventsService {
     }
 
 
+    public Response getNestedRelations(Long id, Long relativeId) {
+
+        return response;
+    }
 }

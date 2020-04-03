@@ -24,4 +24,10 @@ public class RelationController {
     }
 
 
+    @GetMapping("ds")
+    public Response getNestedRelations(@CurrentUser JwtUserDetails jwtUserDetails, Long relativeId) {
+        return eventsService.getNestedRelations(jwtUserDetails.getId(),relativeId);
+    }
+
+
 }
