@@ -68,10 +68,6 @@ public class Users implements Serializable {
     @Column
     private Long pin;
 
-    @Column
-    private String userImage;
-
-
     @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
     @JsonManagedReference(value = "user_relation")
     private List<UserRelation> userRelation;
@@ -208,11 +204,4 @@ public class Users implements Serializable {
         this.pin = pin;
     }
 
-    public String getUserImage() {
-        return userImage;
-    }
-
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
-    }
 }
