@@ -1,6 +1,7 @@
 package com.realtion.human;
 
 import com.realtion.human.model.Response;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,6 +35,12 @@ public class HumanApplication {
 
     @Bean
     Response getResponse() {
-		return new Response();
+        return new Response();
     }
+
+    @Bean
+    ModelMapper getMapper() {
+        return new ModelMapper();
+    }
+
 }

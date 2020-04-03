@@ -1,6 +1,7 @@
 package com.realtion.human.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -70,8 +72,28 @@ public class Users implements Serializable {
     private String userImage;
 
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "user_relation")
+    private List<UserRelation> userRelation;
+
+    @OneToMany(mappedBy = "users2", fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "user_relation2")
+    private List<UserRelation> userRelation2;
+
+    public List<UserRelation> getUserRelation2() {
+        return userRelation2;
+    }
+
+    public void setUserRelation2(List<UserRelation> userRelation2) {
+        this.userRelation2 = userRelation2;
+    }
+
+    public List<UserRelation> getUserRelation() {
+        return userRelation;
+    }
+
+    public void setUserRelation(List<UserRelation> userRelation) {
+        this.userRelation = userRelation;
     }
 
     public Long getId() {

@@ -7,6 +7,7 @@ import com.realtion.human.model.Response;
 import com.realtion.human.repository.UserRepository;
 import com.realtion.human.service.LoginService;
 import com.realtion.human.service.RegistrationService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ public class RegisterController {
 
     @Autowired
     private UserRepository userRepository;
+
 
     @PostMapping(GlobalConstant.LOGIN)
     ResponseEntity<HashMap<String, Object>> login(@Valid @RequestBody LoginForm loginForm) {

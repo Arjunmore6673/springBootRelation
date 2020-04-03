@@ -1,9 +1,9 @@
 package com.realtion.human.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.Hibernate;
+
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -14,16 +14,28 @@ public class UserRelation {
     private Long id;
 
     @Column
-    private Users user1;
-
-    @Column
-    private Users user2;
-
-    @Column
     private String relation;
 
     @Column
     private Date doc;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_1")
+    @JsonBackReference(value = "user_relation")
+    private Users users;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_2")
+    @JsonBackReference(value = "user_relation2")
+    private Users users2;
+
+    public Users getUsers() {
+        return users;
+    }
+
+    public void setUsers(Users users) {
+        this.users = users;
+    }
 
     public Long getId() {
         return id;
@@ -31,22 +43,6 @@ public class UserRelation {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Users getUser1() {
-        return user1;
-    }
-
-    public void setUser1(Users user1) {
-        this.user1 = user1;
-    }
-
-    public Users getUser2() {
-        return user2;
-    }
-
-    public void setUser2(Users user2) {
-        this.user2 = user2;
     }
 
     public String getRelation() {
@@ -63,5 +59,13 @@ public class UserRelation {
 
     public void setDoc(Date doc) {
         this.doc = doc;
+    }
+
+    public Users getUsers2() {
+        return users2;
+    }
+
+    public void setUsers2(Users users2) {
+        this.users2 = users2;
     }
 }
