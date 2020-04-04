@@ -24,7 +24,7 @@ public class UserRelation {
     @JsonBackReference(value = "user_relation")
     private Users users;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_2")
     @JsonBackReference(value = "user_relation2")
     private Users users2;

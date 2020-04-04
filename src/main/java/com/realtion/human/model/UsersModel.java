@@ -16,6 +16,15 @@ public class UsersModel {
     private String userImage;
     private String relation;
     private String doc;
+    private Object hisRelations;
+
+    public Object getHisRelations() {
+        return hisRelations;
+    }
+
+    public void setHisRelations(Object hisRelations) {
+        this.hisRelations = hisRelations;
+    }
 
     public Long getId() {
         return id;
