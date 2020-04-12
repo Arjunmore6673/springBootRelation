@@ -6,7 +6,6 @@ import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 import java.io.Serializable;
 import java.util.Date;
@@ -32,8 +31,6 @@ public class Users implements Serializable {
     @Column(unique = true)
     private String email;
 
-    @NotNull
-    @NotEmpty
     @Column
     private String password;
 
@@ -63,15 +60,12 @@ public class Users implements Serializable {
     private String state;
 
     @Column
-    private String country;
-
-    @Column
     private Long pin;
 
     @Column
     private String code;
 
-    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER,cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonManagedReference(value = "user_relation")
     private List<UserRelation> userRelation;
 
@@ -177,14 +171,6 @@ public class Users implements Serializable {
 
     public void setState(String state) {
         this.state = state;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 
     public Long getPin() {

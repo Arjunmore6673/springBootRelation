@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -34,13 +35,16 @@ public class HumanApplication {
     }
 
     @Bean
+    @Scope("prototype")
     Response getResponse() {
         return new Response();
     }
 
     @Bean
-    ModelMapper getMapper() {
+    ModelMapper getModelMapper() {
         return new ModelMapper();
     }
+
+
 
 }

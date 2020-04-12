@@ -18,7 +18,7 @@ import java.util.Random;
  */
 
 @Service
-@Transactional(propagation = Propagation.REQUIRED, readOnly = true, noRollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
 public class RegistrationService {
 
     @Autowired
@@ -38,21 +38,25 @@ public class RegistrationService {
      */
     @Transactional
     public Response register(Users users) {
-
-        Response response = new Response();
-        Users user = userRepository.findByEmailOrMobile(users.getEmail(), users.getMobile());
-        if (user != null) {
-            response.errorResponse("user is already registered");
-            response.setData(user);
-            return response;
+        try {
+            Users user = userRepository.findByEmailOrMobile(users.getEmail(), users.getMobile());
+            if (user != null && user.getStatus().equals("ACTIVE") && user.getPassword().length() > 0) {
+                response.errorResponse("user is already registered");
+                response.setData(user);
+                return response;
+            } else if (user != null && user.getStatus().equals("ADDED")) {
+                users.setId(user.getId());
+            }
+            String code = users.getName().trim().substring(0, 2);
+            String returnedCode = getCode(code);
+            users.setCode(returnedCode);
+            users.setPassword(passwordEncoder.encode(users.getPassword()));
+            users.setStatus(Constants.ACTIVE);
+            Users userSaved = userRepository.save(users);
+            response.successResponse("user registered successfully", userSaved.getId());
+        } catch (Exception e) {
+            response.errorResponse("something went wrong " + e);
         }
-        String code = users.getName().trim().substring(0, 2);
-        String returnedCode = getCode(code);
-        users.setCode(returnedCode);
-        users.setPassword(passwordEncoder.encode(users.getPassword()));
-        users.setStatus(Constants.ACTIVE);
-        response.setMessage("user registered successfully");
-        userRepository.save(users);
         return response;
     }
 

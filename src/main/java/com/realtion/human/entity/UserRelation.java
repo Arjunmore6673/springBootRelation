@@ -7,6 +7,9 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"user_1", "user_2"})
+})
 public class UserRelation {
 
     @Id

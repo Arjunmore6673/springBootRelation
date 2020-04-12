@@ -3,10 +3,7 @@ package com.realtion.human.service;
 import com.realtion.human.entity.UserRelation;
 import com.realtion.human.entity.Users;
 import com.realtion.human.imple.RelationDaoImpl;
-import com.realtion.human.model.RelationModel;
-import com.realtion.human.model.Response;
-import com.realtion.human.model.UserListModel;
-import com.realtion.human.model.UsersModel;
+import com.realtion.human.model.*;
 import com.realtion.human.repository.UserRelationRepository;
 import com.realtion.human.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -21,7 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(propagation = Propagation.REQUIRED, readOnly = true, noRollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
 public class RelationService {
     public static final Logger logger = LoggerFactory.getLogger("ScheduledTasks.class");
 
@@ -71,6 +68,10 @@ public class RelationService {
      * @return success or failure response
      */
     public Response addRelation(Long userId, RelationModel relationModel) {
+        if (relationModel.getUserId().equals(userId)) {
+            response.errorResponse("user cannot add relation to himself");
+            return response;
+        }
         Optional<Users> users = userRepository.findById(userId);
         if (users.isPresent()) {
             Optional<Users> users2 = userRepository.findById(relationModel.getUserId());
@@ -122,13 +123,40 @@ public class RelationService {
             }
 
             List<UsersModel> mm = models.stream().peek(obj -> obj.setHisRelations(countMap.get(obj.getId()))).collect(Collectors.toList());
-
-
             response.successResponse(mm);
-
         } else {
             response.errorResponse("user not found");
         }
+        return response;
+    }
+
+    /**
+     * @param userId userId
+     * @param model  model simple user with relation
+     * @return success or 12/4/2020
+     */
+    public Response addUserAndRelation(Long userId, RelationUserModel model) {
+        Optional<Users> users = userRepository.findById(userId);
+        if (users.isPresent()) {
+            try {
+                Users user = mapper.map(model.getUser(), Users.class);
+                user.setStatus("ADDED");
+                Users userSaved = userRepository.save(user);
+                UserRelation userRelation = new UserRelation();
+                userRelation.setUsers(users.get());
+                userRelation.setUsers2(userSaved);
+                userRelation.setRelation(model.getRelation());
+                userRelation.setDoc(new Date());
+                userRelationRepository.save(userRelation);
+                response.successResponse("successfully saved relation");
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.errorResponse("something went wrong " + e);
+            }
+        } else {
+            response.errorResponse("user not found");
+        }
+
         return response;
     }
 }
