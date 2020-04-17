@@ -148,7 +148,7 @@ public class RelationService {
                 userRelation.setRelation(model.getRelation());
                 userRelation.setDoc(new Date());
                 userRelationRepository.save(userRelation);
-                response.successResponse("successfully saved relation");
+                response.successResponse("successfully saved relation", "");
             } catch (Exception e) {
                 e.printStackTrace();
                 response.errorResponse("something went wrong " + e);

@@ -28,7 +28,6 @@ public class Users implements Serializable {
     private String mobile;
 
     @Email
-    @Column(unique = true)
     private String email;
 
     @Column
