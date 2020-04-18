@@ -141,7 +141,13 @@ public class RelationService {
         if (users.isPresent()) {
             try {
                 Users user = mapper.map(model.getUser(), Users.class);
-                Users usersByEmail = userRepository.findByEmailOrMobile(user.getEmail(), user.getMobile());
+                Users usersByEmail;
+                if (user.getEmail().length() > 0)
+                    usersByEmail = userRepository.findByEmailOrMobile(user.getEmail(), user.getMobile());
+                else
+                    usersByEmail = userRepository.findByMobile(user.getMobile());
+
+
                 if (usersByEmail != null) {
                     user.setId(usersByEmail.getId());
                     if (user.getAddress().length() < usersByEmail.getAddress().length())
@@ -151,7 +157,7 @@ public class RelationService {
                 Users userSaved = userRepository.save(user);
                 UserRelation userRelationCheck = userRelationRepository.findAllByUsersAndUsers2(users.get(), userSaved);
                 UserRelation userRelation = new UserRelation();
-                if (userRelationCheck != null){
+                if (userRelationCheck != null) {
                     userRelation.setId(userRelationCheck.getId());
                 }
                 userRelation.setUsers(users.get());
