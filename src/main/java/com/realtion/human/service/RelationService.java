@@ -139,14 +139,14 @@ public class RelationService {
         Response response = new Response();
         Optional<Users> users = userRepository.findById(userId);
         if (users.isPresent()) {
-            Users user = mapper.map(model.getUser(), Users.class);
-            Users usersByEmail = userRepository.findByEmailOrMobile(user.getEmail(), user.getMobile());
-            if (usersByEmail != null) {
-                user.setId(usersByEmail.getId());
-                if (user.getAddress().length() < usersByEmail.getAddress().length())
-                    user.setAddress(usersByEmail.getAddress());
-            }
             try {
+                Users user = mapper.map(model.getUser(), Users.class);
+                Users usersByEmail = userRepository.findByEmailOrMobile(user.getEmail(), user.getMobile());
+                if (usersByEmail != null) {
+                    user.setId(usersByEmail.getId());
+                    if (user.getAddress().length() < usersByEmail.getAddress().length())
+                        user.setAddress(usersByEmail.getAddress());
+                }
                 user.setStatus("ADDED");
                 Users userSaved = userRepository.save(user);
                 UserRelation userRelation = new UserRelation();
