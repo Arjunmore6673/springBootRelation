@@ -147,7 +147,6 @@ public class RelationService {
                 else
                     usersByEmail = userRepository.findByMobile(user.getMobile());
 
-
                 if (usersByEmail != null) {
                     user.setId(usersByEmail.getId());
                     if (user.getAddress().length() < usersByEmail.getAddress().length())
