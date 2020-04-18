@@ -53,16 +53,9 @@ public class Users implements Serializable {
     private String address;
 
     @Column
-    private String city;
-
-    @Column
-    private String state;
-
-    @Column
-    private Long pin;
-
-    @Column
     private String code;
+
+
 
     @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonManagedReference(value = "user_relation")
@@ -154,30 +147,6 @@ public class Users implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public Long getPin() {
-        return pin;
-    }
-
-    public void setPin(Long pin) {
-        this.pin = pin;
     }
 
     public String getCode() {

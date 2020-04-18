@@ -149,7 +149,11 @@ public class RelationService {
                 }
                 user.setStatus("ADDED");
                 Users userSaved = userRepository.save(user);
+                UserRelation userRelationCheck = userRelationRepository.findAllByUsersAndUsers2(users.get(), userSaved);
                 UserRelation userRelation = new UserRelation();
+                if (userRelationCheck != null){
+                    userRelation.setId(userRelationCheck.getId());
+                }
                 userRelation.setUsers(users.get());
                 userRelation.setUsers2(userSaved);
                 userRelation.setRelation(model.getRelation());
