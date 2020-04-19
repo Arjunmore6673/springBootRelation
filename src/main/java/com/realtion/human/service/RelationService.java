@@ -1,9 +1,11 @@
 package com.realtion.human.service;
 
+import com.realtion.human.entity.Feedback;
 import com.realtion.human.entity.UserRelation;
 import com.realtion.human.entity.Users;
 import com.realtion.human.imple.RelationDaoImpl;
 import com.realtion.human.model.*;
+import com.realtion.human.repository.FeedbackRepository;
 import com.realtion.human.repository.UserRelationRepository;
 import com.realtion.human.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -36,6 +38,8 @@ public class RelationService {
 
     @Autowired
     private RelationDaoImpl relationDao;
+    @Autowired
+    private FeedbackRepository feedbackRepository;
 
     /**
      * @param userId userId
@@ -93,11 +97,7 @@ public class RelationService {
     }
 
     public Response getOthersRelations(Long userId, Long otherId) {
-        Optional<Users> users;
-        if (otherId == null)
-            users = userRepository.findById(userId);
-        else
-            users = userRepository.findById(otherId);
+        Optional<Users> users = userRepository.findById(otherId == null ? userId : otherId);
         if (users.isPresent()) {
             UserListModel userListModel = new UserListModel();
             userListModel.setUser(mapper.map(users.get(), UsersModel.class));
@@ -177,6 +177,20 @@ public class RelationService {
             response.errorResponse("user not found");
         }
 
+        return response;
+    }
+
+    public Response addFeedback(Long userId, Feedback feedback) {
+        Response response = new Response();
+        Optional<Users> users = userRepository.findById(userId);
+        if (users.isPresent()) {
+            feedback.setDate(new Date());
+            feedback.setUserId(userId);
+            feedbackRepository.save(feedback);
+            response.successResponse("feedback taken successfully");
+        } else {
+            response.errorResponse("user not registered");
+        }
         return response;
     }
 }

@@ -10,6 +10,5 @@ public class GlobalConstant {
     public static final String GET_NESTED = "get_nested" ;
     public static final String ADD_USER_RELATION = "add_relation" ;
     public static final String ADD_USER_RELATION_WITH_DATA = "add_relation_user";
-
-
+    public static final String ADD_FEEDBACK = "add_feedback";
 }

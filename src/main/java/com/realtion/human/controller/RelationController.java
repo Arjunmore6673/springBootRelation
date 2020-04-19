@@ -1,6 +1,7 @@
 package com.realtion.human.controller;
 
 import com.realtion.human.config.GlobalConstant;
+import com.realtion.human.entity.Feedback;
 import com.realtion.human.model.RelationModel;
 import com.realtion.human.model.RelationUserModel;
 import com.realtion.human.model.Response;
@@ -36,6 +37,11 @@ public class RelationController {
     @PostMapping(GlobalConstant.ADD_USER_RELATION_WITH_DATA)
     public Response addUserAndRelation(@CurrentUser JwtUserDetails jwtUserDetails, @RequestBody RelationUserModel model) {
         return relationService.addUserAndRelation(jwtUserDetails.getId(), model);
+    }
+
+    @PostMapping(GlobalConstant.ADD_FEEDBACK)
+    public Response addFeedback(@CurrentUser JwtUserDetails jwtUserDetails, @RequestBody Feedback feedback) {
+        return relationService.addFeedback(jwtUserDetails.getId(), feedback);
     }
 
 
