@@ -29,8 +29,8 @@ public class RelationController {
 
 
     @GetMapping(GlobalConstant.GET_NESTED)
-    public Response getOthersRelations(@CurrentUser JwtUserDetails jwtUserDetails, Long id) {
-        return relationService.getOthersRelations(jwtUserDetails.getId(), id);
+    public Response getOthersRelations(@CurrentUser JwtUserDetails jwtUserDetails, @RequestParam(value = "userId", required = false) Long user2) {
+        return relationService.getOthersRelations(jwtUserDetails.getId(), user2);
     }
 
     @PostMapping(GlobalConstant.ADD_USER_RELATION_WITH_DATA)

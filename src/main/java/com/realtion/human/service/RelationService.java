@@ -93,7 +93,11 @@ public class RelationService {
     }
 
     public Response getOthersRelations(Long userId, Long otherId) {
-        Optional<Users> users = userRepository.findById(userId);
+        Optional<Users> users;
+        if (otherId == null)
+            users = userRepository.findById(userId);
+        else
+            users = userRepository.findById(otherId);
         if (users.isPresent()) {
             UserListModel userListModel = new UserListModel();
             userListModel.setUser(mapper.map(users.get(), UsersModel.class));
