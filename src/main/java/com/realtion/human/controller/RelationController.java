@@ -2,6 +2,7 @@ package com.realtion.human.controller;
 
 import com.realtion.human.config.GlobalConstant;
 import com.realtion.human.entity.Feedback;
+import com.realtion.human.model.ImageModel;
 import com.realtion.human.model.RelationModel;
 import com.realtion.human.model.RelationUserModel;
 import com.realtion.human.model.Response;
@@ -17,6 +18,12 @@ public class RelationController {
 
     @Autowired
     private RelationService relationService;
+
+
+    @PostMapping(GlobalConstant.ADD_FEEDBACK)
+    public Response addFeedback(@CurrentUser JwtUserDetails jwtUserDetails, @RequestBody Feedback feedback) {
+        return relationService.addFeedback(jwtUserDetails.getId(), feedback);
+    }
 
     @GetMapping(GlobalConstant.GET_USER_WITH_RELATION)
     public Response getUserRelations(@CurrentUser JwtUserDetails jwtUserDetails) {
@@ -39,9 +46,9 @@ public class RelationController {
         return relationService.addUserAndRelation(jwtUserDetails.getId(), model);
     }
 
-    @PostMapping(GlobalConstant.ADD_FEEDBACK)
-    public Response addFeedback(@CurrentUser JwtUserDetails jwtUserDetails, @RequestBody Feedback feedback) {
-        return relationService.addFeedback(jwtUserDetails.getId(), feedback);
+    @PutMapping(GlobalConstant.UPDATE_USER_IMAGE)
+    public Response updateUserWithImage(@RequestBody ImageModel model) {
+        return relationService.updateUserWithImage(model);
     }
 
 

@@ -193,4 +193,16 @@ public class RelationService {
         }
         return response;
     }
+
+    public Response updateUserWithImage(ImageModel model) {
+        Response response = new Response();
+        Optional<Users> users = userRepository.findById(model.getUserId());
+        if (users.isPresent()) {
+            Users user = users.get();
+            user.setImage(model.getUrl());
+        } else {
+            response.errorResponse("user not registered");
+        }
+        return response;
+    }
 }
