@@ -1,5 +1,7 @@
 package com.realtion.human.model;
 
+import java.util.Date;
+
 public class UsersModel {
 
     private Long id;
@@ -7,6 +9,7 @@ public class UsersModel {
     private String mobile;
     private String email;
     private String status;
+    private Date dob;
     private String name;
     private String gender;
     private String userImage;
@@ -118,5 +121,13 @@ public class UsersModel {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Date getDob() {
+        return dob;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
     }
 }

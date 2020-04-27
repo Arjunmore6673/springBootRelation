@@ -2,10 +2,7 @@ package com.realtion.human.controller;
 
 import com.realtion.human.config.GlobalConstant;
 import com.realtion.human.entity.Feedback;
-import com.realtion.human.model.ImageModel;
-import com.realtion.human.model.RelationModel;
-import com.realtion.human.model.RelationUserModel;
-import com.realtion.human.model.Response;
+import com.realtion.human.model.*;
 import com.realtion.human.model.jwt.JwtUserDetails;
 import com.realtion.human.security.CurrentUser;
 import com.realtion.human.service.RelationService;
@@ -49,6 +46,11 @@ public class RelationController {
     @PutMapping(GlobalConstant.UPDATE_USER_IMAGE)
     public Response updateUserWithImage(@RequestBody ImageModel model) {
         return relationService.updateUserWithImage(model);
+    }
+
+    @PutMapping(GlobalConstant.UPDATE_USER)
+    public Response updateUser(@RequestBody UsersModel model) {
+        return relationService.updateUser(model);
     }
 
 

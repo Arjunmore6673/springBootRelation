@@ -205,4 +205,21 @@ public class RelationService {
         }
         return response;
     }
+
+    public Response updateUser(UsersModel model) {
+        Response response = new Response();
+        Optional<Users> users = userRepository.findById(model.getId());
+        try {
+            if (users.isPresent()) {
+                Users userToBeSaved = mapper.map(model, Users.class);
+                userToBeSaved.setId(users.get().getId());
+                userRepository.save(userToBeSaved);
+                response.successResponse("successfully saved", userToBeSaved);
+            } else
+                response.errorResponse("user not registered");
+        } catch (Exception e) {
+            response.errorResponse("something went wrong " + e.getMessage());
+        }
+        return response;
+    }
 }
