@@ -3,6 +3,7 @@ package com.realtion.human.service;
 import com.realtion.human.entity.Feedback;
 import com.realtion.human.entity.UserRelation;
 import com.realtion.human.entity.Users;
+import com.realtion.human.helper.RelationList;
 import com.realtion.human.imple.RelationDaoImpl;
 import com.realtion.human.model.*;
 import com.realtion.human.repository.FeedbackRepository;
@@ -132,6 +133,51 @@ public class RelationService {
             response.errorResponse("user not found");
         }
         return response;
+    }
+
+
+    String getRelationHelper(String relation, String gender) {
+        String opposite = "";
+        if (RelationList.AAI.getValue().equals(relation)) {
+            opposite = gender.equals("MALE") ? RelationList.MULGA.getValue() : RelationList.MULGI.getValue();
+        }
+
+        if (RelationList.PAPAA.getValue().equals(relation)) {
+            opposite = gender.equals("MALE") ? RelationList.MULGA.getValue() : RelationList.MULGI.getValue();
+        }
+
+        // MULGA MULGI
+        if (RelationList.MULGA.getValue().equals(relation) || RelationList.MULGI.getValue().equals(relation)) {
+            opposite = gender.equals("MALE") ? RelationList.PAPAA.getValue() : RelationList.AAI.getValue();
+        }
+
+        //bhavu, bahin
+        if (RelationList.BHAVU.getValue().equals(relation) || RelationList.BAHIN.getValue().equals(relation)) {
+            opposite = gender.equals("MALE") ? RelationList.BHAVU.getValue() : RelationList.BAHIN.getValue();
+        }
+
+        if (RelationList.AAJI.getValue().equals(relation) || RelationList.AJOBA.getValue().equals(relation)) {
+            opposite = gender.equals("MALE") ? RelationList.NATU.getValue() : RelationList.NAT.getValue();
+        }
+
+        if (RelationList.PANJI.getValue().equals(relation) || RelationList.PANJOBA.getValue().equals(relation)) {
+            opposite = gender.equals("MALE") ? RelationList.NATU.getValue() : RelationList.NAT.getValue();
+        }
+
+        if (RelationList.NAT.getValue().equals(relation) || RelationList.NATU.getValue().equals(relation)) {
+            opposite = gender.equals("MALE") ? RelationList.AJOBA.getValue() : RelationList.AAJI.getValue();
+        }
+
+        if (RelationList.MAMA.getValue().equals(relation) || RelationList.MAMI.getValue().equals(relation)) {
+            opposite = gender.equals("MALE") ? RelationList.BHACHA.getValue() : RelationList.BHACHI.getValue();
+        }
+
+        if (RelationList.BHACHA.getValue().equals(relation) || RelationList.BHACHI.getValue().equals(relation)) {
+            opposite = gender.equals("MALE") ? RelationList.MAMA.getValue() : RelationList.MAMI.getValue();
+        }
+
+
+        return opposite;
     }
 
     /**

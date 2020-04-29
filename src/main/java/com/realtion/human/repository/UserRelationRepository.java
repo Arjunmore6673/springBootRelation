@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public interface UserRelationRepository extends CrudRepository<UserRelation, Long> {
     List<UserRelation> findAllByUsersId(@Param("uId") Long userId);
+    List<UserRelation> findAllByUsers2Id(@Param("uId") Long userId);
 
     UserRelation findAllByUsersAndUsers2(@Param("uId") Users userId, @Param("uId2") Users userId2);
 
