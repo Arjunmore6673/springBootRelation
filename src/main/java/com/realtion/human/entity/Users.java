@@ -1,7 +1,6 @@
 package com.realtion.human.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 
@@ -55,6 +54,12 @@ public class Users implements Serializable {
 
     @Column
     private String code;
+
+    @Column
+    private String firebaseId;
+
+    @Column
+    private String firebaseToken;
 
 
     @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
@@ -155,5 +160,21 @@ public class Users implements Serializable {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getFirebaseId() {
+        return firebaseId;
+    }
+
+    public void setFirebaseId(String firebaseId) {
+        this.firebaseId = firebaseId;
+    }
+
+    public String getFirebaseToken() {
+        return firebaseToken;
+    }
+
+    public void setFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
     }
 }

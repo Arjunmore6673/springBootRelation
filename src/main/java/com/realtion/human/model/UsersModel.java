@@ -12,12 +12,14 @@ public class UsersModel {
     private Date dob;
     private String name;
     private String gender;
-    private String userImage;
     private String relation;
     private String doc;
     private String code;
     private String address;
     private Object hisRelations;
+    private String firebaseId;
+    private String firebaseToken;
+
 
     public Object getHisRelations() {
         return hisRelations;
@@ -83,14 +85,6 @@ public class UsersModel {
         this.gender = gender;
     }
 
-    public String getUserImage() {
-        return userImage;
-    }
-
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
-    }
-
     public String getRelation() {
         return relation;
     }
@@ -129,5 +123,21 @@ public class UsersModel {
 
     public void setDob(Date dob) {
         this.dob = dob;
+    }
+
+    public String getFirebaseId() {
+        return firebaseId;
+    }
+
+    public void setFirebaseId(String firebaseId) {
+        this.firebaseId = firebaseId;
+    }
+
+    public String getFirebaseToken() {
+        return firebaseToken;
+    }
+
+    public void setFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
     }
 }

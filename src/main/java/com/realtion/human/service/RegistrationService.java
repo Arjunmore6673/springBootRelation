@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -52,6 +53,7 @@ public class RegistrationService {
             users.setCode(returnedCode);
             users.setPassword(passwordEncoder.encode(users.getPassword()));
             users.setStatus(Constants.ACTIVE);
+            users.setDob(new Date());
             Users userSaved = userRepository.save(users);
             response.successResponse("user registered successfully", userSaved.getId());
         } catch (Exception e) {
