@@ -48,6 +48,7 @@ public class RegistrationService {
             } else if (user != null && user.getStatus().equals("ADDED")) {
                 users.setId(user.getId());
             }
+            users.setEmail(!users.getEmail().equals("") ? users.getEmail() : null);
             String code = users.getName().trim().substring(0, 2);
             String returnedCode = getCode(code);
             users.setCode(returnedCode);

@@ -100,83 +100,78 @@ public class RelationService {
     public Response getOthersRelations(Long userId, Long otherId) {
         Optional<Users> users = userRepository.findById(otherId == null ? userId : otherId);
         if (users.isPresent()) {
-            UserListModel userListModel = new UserListModel();
-            userListModel.setUser(mapper.map(users.get(), UsersModel.class));
             List<UserRelation> userRelations = userRelationRepository.findAllByUsersId(users.get().getId());
-            List<UsersModel> models = userRelations.stream().map(obj -> {
-                UsersModel usersModel = mapper.map(obj.getUsers2(), UsersModel.class);
-                usersModel.setRelation(obj.getRelation());
-                return usersModel;
+            List<UserRelation> yourRelationAddedByOther = userRelationRepository.findAllByUsers2Id(users.get().getId());
+            List<UsersModel> userRelatives = getRelationListHelper(userRelations, 1);
+            List<UsersModel> yourRelativesOther = getRelationListHelper(yourRelationAddedByOther, 2);
+            List<UsersModel> convertedList = yourRelativesOther.stream().peek((obj) -> {
+                String relation = getRelationHelper(obj.getRelation(), obj.getGender(), obj.getName());
+                obj.setRelation(relation);
             }).collect(Collectors.toList());
-            userListModel.setRelatives(models);
-
-            List<Long> relationIdList = new ArrayList<>();
-            if (userRelations.size() != 0) {
-                relationIdList = userRelations.stream().map(x -> x.getUsers2().getId()).collect(Collectors.toList());
-            }
-            List<Object[]> list;
-            Map<Long, Set<Object>> countMap = new LinkedHashMap<>();
-            if (!relationIdList.isEmpty()) {
-                list = relationDao.getRelations(relationIdList);
-                Set<Object> user = new HashSet<>();
-                if (!list.isEmpty()) {
-                    for (Object[] ob : list) {
-                        user.add(ob[1]);
-                        countMap.put((Long) ob[0], user);
-                    }
-                }
-            }
-
-            List<UsersModel> mm = models.stream().peek(obj -> obj.setHisRelations(countMap.get(obj.getId()))).collect(Collectors.toList());
-            response.successResponse(mm);
+            userRelatives.addAll(convertedList);
+            response.successResponse(userRelatives);
         } else {
             response.errorResponse("user not found");
         }
         return response;
     }
 
+    private List<UsersModel> getRelationListHelper(List<UserRelation> userRelations, int i) {
+        List<UsersModel> models = userRelations.stream().map(obj -> {
+            UsersModel usersModel = mapper.map(i == 1 ? obj.getUsers2() : obj.getUsers(), UsersModel.class);
+            usersModel.setRelation(obj.getRelation());
+            return usersModel;
+        }).collect(Collectors.toList());
 
-    String getRelationHelper(String relation, String gender) {
+        List<Long> relationIdList = new ArrayList<>();
+        if (userRelations.size() != 0) {
+            relationIdList = userRelations.stream().map((x) -> i == 1 ? x.getUsers2().getId() : x.getUsers().getId()).collect(Collectors.toList());
+        }
+        List<Object[]> list;
+        Map<Long, Set<Object>> countMap = new LinkedHashMap<>();
+        if (!relationIdList.isEmpty()) {
+            list = relationDao.getRelations(relationIdList);
+            Set<Object> user = new HashSet<>();
+            if (!list.isEmpty()) {
+                for (Object[] ob : list) {
+                    user.add(ob[1]);
+                    countMap.put((Long) ob[0], user);
+                }
+            }
+        }
+
+        return models.stream().peek(obj -> obj.setHisRelations(countMap.get(obj.getId()))).collect(Collectors.toList());
+
+    }
+
+
+    private String getRelationHelper(String relation, String gender, String name) {
         String opposite = "";
         if (RelationList.AAI.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.MULGA.getValue() : RelationList.MULGI.getValue();
-        }
-
-        if (RelationList.PAPAA.getValue().equals(relation)) {
+        } else if (RelationList.PAPAA.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.MULGA.getValue() : RelationList.MULGI.getValue();
         }
-
         // MULGA MULGI
-        if (RelationList.MULGA.getValue().equals(relation) || RelationList.MULGI.getValue().equals(relation)) {
+        else if (RelationList.MULGA.getValue().equals(relation) || RelationList.MULGI.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.PAPAA.getValue() : RelationList.AAI.getValue();
         }
-
         //bhavu, bahin
-        if (RelationList.BHAVU.getValue().equals(relation) || RelationList.BAHIN.getValue().equals(relation)) {
+        else if (RelationList.BHAVU.getValue().equals(relation) || RelationList.BAHIN.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.BHAVU.getValue() : RelationList.BAHIN.getValue();
-        }
-
-        if (RelationList.AAJI.getValue().equals(relation) || RelationList.AJOBA.getValue().equals(relation)) {
+        } else if (RelationList.AAJI.getValue().equals(relation) || RelationList.AJOBA.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.NATU.getValue() : RelationList.NAT.getValue();
-        }
-
-        if (RelationList.PANJI.getValue().equals(relation) || RelationList.PANJOBA.getValue().equals(relation)) {
+        } else if (RelationList.PANJI.getValue().equals(relation) || RelationList.PANJOBA.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.NATU.getValue() : RelationList.NAT.getValue();
-        }
-
-        if (RelationList.NAT.getValue().equals(relation) || RelationList.NATU.getValue().equals(relation)) {
+        } else if (RelationList.NAT.getValue().equals(relation) || RelationList.NATU.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.AJOBA.getValue() : RelationList.AAJI.getValue();
-        }
-
-        if (RelationList.MAMA.getValue().equals(relation) || RelationList.MAMI.getValue().equals(relation)) {
+        } else if (RelationList.MAMA.getValue().equals(relation) || RelationList.MAMI.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.BHACHA.getValue() : RelationList.BHACHI.getValue();
-        }
-
-        if (RelationList.BHACHA.getValue().equals(relation) || RelationList.BHACHI.getValue().equals(relation)) {
+        } else if (RelationList.BHACHA.getValue().equals(relation) || RelationList.BHACHI.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.MAMA.getValue() : RelationList.MAMI.getValue();
+        } else {
+            opposite = name + "'ns " + relation;
         }
-
-
         return opposite;
     }
 
@@ -194,8 +189,10 @@ public class RelationService {
                 Users usersByEmail;
                 if (user.getEmail().length() > 0)
                     usersByEmail = userRepository.findByEmailOrMobile(user.getEmail(), user.getMobile());
-                else
+                else {
                     usersByEmail = userRepository.findByMobile(user.getMobile());
+                    user.setEmail(null);
+                }
 
                 if (usersByEmail != null) {
                     user.setId(usersByEmail.getId());
