@@ -109,7 +109,11 @@ public class RelationService {
                 obj.setRelation(relation);
             }).collect(Collectors.toList());
             userRelatives.addAll(convertedList);
-            response.successResponse(userRelatives);
+
+            Set<UsersModel> s = new HashSet<UsersModel>(userRelatives);
+            List<UsersModel> list = new ArrayList<UsersModel>(s);
+
+            response.successResponse(list);
         } else {
             response.errorResponse("user not found");
         }
@@ -170,7 +174,7 @@ public class RelationService {
         } else if (RelationList.BHACHA.getValue().equals(relation) || RelationList.BHACHI.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.MAMA.getValue() : RelationList.MAMI.getValue();
         } else {
-            opposite = name + "'ns " + relation;
+            opposite = name + "'s " + relation;
         }
         return opposite;
     }
@@ -194,13 +198,14 @@ public class RelationService {
                     user.setEmail(null);
                 }
 
+                Users userSaved;
                 if (usersByEmail != null) {
-                    user.setId(usersByEmail.getId());
-                    if (user.getAddress().length() < usersByEmail.getAddress().length())
-                        user.setAddress(usersByEmail.getAddress());
+                    userSaved = usersByEmail;
+                } else {
+                    user.setStatus("ADDED");
+                    userSaved = userRepository.save(user);
                 }
-                user.setStatus("ADDED");
-                Users userSaved = userRepository.save(user);
+
                 UserRelation userRelationCheck = userRelationRepository.findAllByUsersAndUsers2(users.get(), userSaved);
                 UserRelation userRelation = new UserRelation();
                 if (userRelationCheck != null) {

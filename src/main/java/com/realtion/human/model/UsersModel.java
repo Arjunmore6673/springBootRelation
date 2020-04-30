@@ -1,6 +1,7 @@
 package com.realtion.human.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class UsersModel {
 
@@ -139,5 +140,32 @@ public class UsersModel {
 
     public void setFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UsersModel)) return false;
+        UsersModel that = (UsersModel) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getImage(), that.getImage()) &&
+                Objects.equals(getMobile(), that.getMobile()) &&
+                Objects.equals(getEmail(), that.getEmail()) &&
+                Objects.equals(getStatus(), that.getStatus()) &&
+                Objects.equals(getDob(), that.getDob()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getGender(), that.getGender()) &&
+                Objects.equals(getRelation(), that.getRelation()) &&
+                Objects.equals(getDoc(), that.getDoc()) &&
+                Objects.equals(getCode(), that.getCode()) &&
+                Objects.equals(getAddress(), that.getAddress()) &&
+                Objects.equals(getHisRelations(), that.getHisRelations()) &&
+                Objects.equals(getFirebaseId(), that.getFirebaseId()) &&
+                Objects.equals(getFirebaseToken(), that.getFirebaseToken());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getImage(), getMobile(), getEmail(), getStatus(), getDob(), getName(), getGender(), getRelation(), getDoc(), getCode(), getAddress(), getHisRelations(), getFirebaseId(), getFirebaseToken());
     }
 }
