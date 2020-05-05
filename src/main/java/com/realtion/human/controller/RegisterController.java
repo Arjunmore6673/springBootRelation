@@ -29,7 +29,6 @@ public class RegisterController {
     @Autowired
     private UserRepository userRepository;
 
-
     @PostMapping(GlobalConstant.LOGIN)
     ResponseEntity<HashMap<String, Object>> login(@Valid @RequestBody LoginForm loginForm) {
         return loginService.getToken(loginForm.getUsername(), loginForm.getPassword());
