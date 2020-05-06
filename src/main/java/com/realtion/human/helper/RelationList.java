@@ -2,7 +2,7 @@ package com.realtion.human.helper;
 
 public enum RelationList {
     AAI("AAI"),
-    PAPAA("PAPAA"),
+    PAPAA("BABA"),
     MULGA("MULGA"),
     MULGI("MULGI"),
     BHAVU("BHAVU"),

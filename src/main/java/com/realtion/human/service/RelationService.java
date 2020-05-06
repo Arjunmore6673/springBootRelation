@@ -110,8 +110,8 @@ public class RelationService {
             }).collect(Collectors.toList());
             userRelatives.addAll(convertedList);
 
-            Set<UsersModel> s = new HashSet<UsersModel>(userRelatives);
-            List<UsersModel> list = new ArrayList<UsersModel>(s);
+            Set<UsersModel> s = new HashSet<>(userRelatives);
+            List<UsersModel> list = new ArrayList<>(s);
 
             response.successResponse(list);
         } else {
@@ -174,7 +174,7 @@ public class RelationService {
         } else if (RelationList.BHACHA.getValue().equals(relation) || RelationList.BHACHI.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.MAMA.getValue() : RelationList.MAMI.getValue();
         } else {
-            opposite = name + "'s " + relation;
+            opposite = name + " added above person's relation as " + "'" + relation + "'";
         }
         return opposite;
     }
