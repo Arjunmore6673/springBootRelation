@@ -32,12 +32,6 @@ public class RelationController {
         return relationService.addRelation(jwtUserDetails.getId(), relationModel);
     }
 
-    @PostMapping(GlobalConstant.ADD_OTHER_USER_RELATION)
-    public Response addOtherRelation(@RequestParam("userId") Long userId, @RequestBody RelationModel relationModel) {
-        return relationService.addRelation(userId, relationModel);
-    }
-
-
     @GetMapping(GlobalConstant.GET_NESTED)
     public Response getOthersRelations(@CurrentUser JwtUserDetails jwtUserDetails, @RequestParam(value = "userId", required = false) Long user2) {
         return relationService.getOthersRelations(jwtUserDetails.getId(), user2);
@@ -46,6 +40,10 @@ public class RelationController {
     @PostMapping(GlobalConstant.ADD_USER_RELATION_WITH_DATA)
     public Response addUserAndRelation(@CurrentUser JwtUserDetails jwtUserDetails, @RequestBody RelationUserModel model) {
         return relationService.addUserAndRelation(jwtUserDetails.getId(), model);
+    }
+    @PostMapping(GlobalConstant.ADD_OTHER_USER_RELATION)
+    public Response addOtherRelation(@RequestParam("userId") Long userId, @RequestBody RelationUserModel model) {
+        return relationService.addUserAndRelation(userId, model);
     }
 
     @PutMapping(GlobalConstant.UPDATE_USER_IMAGE)
