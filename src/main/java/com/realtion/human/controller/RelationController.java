@@ -32,6 +32,11 @@ public class RelationController {
         return relationService.addRelation(jwtUserDetails.getId(), relationModel);
     }
 
+    @PostMapping(GlobalConstant.ADD_OTHER_USER_RELATION)
+    public Response addOtherRelation(@RequestParam("userId") Long userId, @RequestBody RelationModel relationModel) {
+        return relationService.addRelation(userId, relationModel);
+    }
+
 
     @GetMapping(GlobalConstant.GET_NESTED)
     public Response getOthersRelations(@CurrentUser JwtUserDetails jwtUserDetails, @RequestParam(value = "userId", required = false) Long user2) {
