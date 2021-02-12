@@ -33,7 +33,8 @@ public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest,
-                                                HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
+                                                HttpServletResponse httpServletResponse)
+            throws AuthenticationException, IOException, ServletException {
         if (httpServletRequest.getMethod().equalsIgnoreCase("OPTIONS")) {
             return null;
         }
@@ -41,8 +42,7 @@ public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessi
         String header = httpServletRequest.getHeader("Authorization");
 //		System.out.println("filter called....");
         if (header == null || !header.startsWith("Token ")) {
-            throw new RuntimeException(
-                    messageSource.getMessage("token.missing", null, LocaleContextHolder.getLocale()));
+            throw new RuntimeException("token.missing");
         }
 
         String authenticationToken = header.substring(6);

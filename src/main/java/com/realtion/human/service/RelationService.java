@@ -48,22 +48,28 @@ public class RelationService {
      */
     @Transactional
     public Response getUserRelations(Long userId) {
-        Optional<Users> users = userRepository.findById(userId);
-        if (users.isPresent()) {
-            UserListModel userListModel = new UserListModel();
-            userListModel.setUser(mapper.map(users.get(), UsersModel.class));
-            List<UserRelation> userRelations = userRelationRepository.findAllByUsersId(users.get().getId());
-            List<UsersModel> models = userRelations.stream().map(obj -> {
-                UsersModel usersModel = mapper.map(obj.getUsers2(), UsersModel.class);
-                usersModel.setRelation(obj.getRelation());
-                return usersModel;
-            }).collect(Collectors.toList());
-            userListModel.setRelatives(models);
-            response.successResponse(userListModel);
-        } else {
-            response.errorResponse("user not found");
+        Response response = new Response();
+        try {
+            Optional<Users> users = userRepository.findById(userId);
+            if (users.isPresent()) {
+                UserListModel userListModel = new UserListModel();
+                userListModel.setUser(mapper.map(users.get(), UsersModel.class));
+                List<UserRelation> userRelations = userRelationRepository.findAllByUsersId(users.get().getId());
+                List<UsersModel> models = userRelations.stream().map(obj -> {
+                    UsersModel usersModel = mapper.map(obj.getUsers2(), UsersModel.class);
+                    usersModel.setRelation(obj.getRelation());
+                    return usersModel;
+                }).collect(Collectors.toList());
+                userListModel.setRelatives(models);
+                response.successResponse(userListModel);
+            } else {
+                response.errorResponse("user not found");
+            }
+            return response;
+        } catch (Exception e) {
+            response.errorResponse("Something went wrong " + e);
+            return response;
         }
-        return response;
     }
 
 
@@ -73,31 +79,46 @@ public class RelationService {
      * @return success or failure response
      */
     public Response addRelation(Long userId, RelationModel relationModel) {
-        if (relationModel.getUserId().equals(userId)) {
-            response.errorResponse("user cannot add relation to himself");
+        Response response = new Response();
+        try {
+            if (relationModel.getUserId().equals(userId)) {
+                response.errorResponse("user cannot add relation to himself");
+                return response;
+            }
+
+            Optional<Users> users = userRepository.findById(userId);
+            Optional<Users> users2 = userRepository.findById(relationModel.getUserId());
+            if (!users.isPresent()) {
+                response.errorResponse("user not found");
+                return response;
+            }
+            if (!users2.isPresent()) {
+                response.errorResponse("user not found given in the body..!");
+                return response;
+            }
+
+            UserRelation userRelation1 = userRelationRepository.findAllByUsersAndUsers2(users.get(), users2.get());
+            if (userRelation1 != null) {
+                response.errorResponse("relation already present..!");
+                return response;
+            }
+
+            UserRelation userRelation = new UserRelation();
+            userRelation.setDoc(new Date());
+            userRelation.setRelation(relationModel.getRelation());
+            userRelation.setUsers(users.get());
+            userRelation.setUsers2(users2.get());
+            userRelationRepository.save(userRelation);
+            response.successResponse("user relation added successfully");
+            return response;
+        } catch (Exception e) {
+            response.errorResponse("Something went wrong..!");
             return response;
         }
-        Optional<Users> users = userRepository.findById(userId);
-        if (users.isPresent()) {
-            Optional<Users> users2 = userRepository.findById(relationModel.getUserId());
-            if (users2.isPresent()) {
-                UserRelation userRelation = new UserRelation();
-                userRelation.setDoc(new Date());
-                userRelation.setRelation(relationModel.getRelation());
-                userRelation.setUsers(users.get());
-                userRelation.setUsers2(users2.get());
-                userRelationRepository.save(userRelation);
-                response.successResponse("user relation added successfully");
-            } else {
-                response.errorResponse("received user not found");
-            }
-        } else {
-            response.errorResponse("user not found");
-        }
-        return response;
     }
 
     public Response getOthersRelations(Long userId, Long otherId) {
+        Response response = new Response();
         Optional<Users> users = userRepository.findById(otherId == null ? userId : otherId);
         if (users.isPresent()) {
             List<UserRelation> userRelations = userRelationRepository.findAllByUsersId(users.get().getId());
@@ -187,24 +208,42 @@ public class RelationService {
     public Response addUserAndRelation(Long userId, RelationUserModel model) {
         Response response = new Response();
         Optional<Users> users = userRepository.findById(userId);
-        if (users.isPresent()) {
-            try {
-                Users user = mapper.map(model.getUser(), Users.class);
-                Users usersByEmail;
-                if (user.getEmail().length() > 0)
-                    usersByEmail = userRepository.findByEmailOrMobile(user.getEmail(), user.getMobile());
-                else {
-                    usersByEmail = userRepository.findByMobile(user.getMobile());
-                    user.setEmail(null);
-                }
+        try {
+            if (users.isPresent()) {
+                //TODO : check given user is already present in db check mail and mobile..!.
+                Users emailUserChk = userRepository.findByEmail(model.getUser().getEmail());
+                Users mobileUerChk = userRepository.findByMobile(model.getUser().getMobile());
+                Users relativeNew = null;
+                //TODO : if present check relation is already entry exist with this user
+                //TODO Doing this secretly because it findByEmailMobile giving wrong response.!
+                if (emailUserChk != null)
+                    relativeNew = emailUserChk;
+                if (mobileUerChk != null)
+                    relativeNew = mobileUerChk;
 
-                Users userSaved;
-                if (usersByEmail != null) {
-                    userSaved = usersByEmail;
-                } else {
-                    user.setStatus("ADDED");
-                    userSaved = userRepository.save(user);
+                if (relativeNew != null) {
+                    UserRelation userRelation1 = userRelationRepository.findAllByUsersAndUsers2(users.get(), relativeNew);
+                    //TODO : if yes give msg
+                    if (userRelation1 != null) {
+                        response.successResponse("relation already present..!", userRelation1);
+                        return response;
+                    } else {
+                        //TODO : if not add relation..!
+                        UserRelation userRelation = new UserRelation();
+                        userRelation.setDoc(new Date());
+                        userRelation.setRelation(model.getRelation());
+                        userRelation.setUsers(users.get());
+                        userRelation.setUsers2(relativeNew);
+                        userRelationRepository.save(userRelation);
+                        response.successResponse("user relation added successfully");
+                        return response;
+                    }
                 }
+                // TODO else create new entry in db
+                //TODO FOR user and for user relation
+                Users user = mapper.map(model.getUser(), Users.class);
+                user.setStatus("ADDED");
+                Users userSaved = userRepository.save(user);
 
                 UserRelation userRelationCheck = userRelationRepository.findAllByUsersAndUsers2(users.get(), userSaved);
                 UserRelation userRelation = new UserRelation();
@@ -217,15 +256,14 @@ public class RelationService {
                 userRelation.setDoc(new Date());
                 userRelationRepository.save(userRelation);
                 response.successResponse("successfully saved relation", "");
-            } catch (Exception e) {
-                e.printStackTrace();
-                response.errorResponse("something went wrong " + e);
+            } else {
+                response.errorResponse("user not found");
             }
-        } else {
-            response.errorResponse("user not found");
+            return response;
+        } catch (Exception e) {
+            response.errorResponse("Something went wrong..! + " + e);
+            return response;
         }
-
-        return response;
     }
 
     public Response addFeedback(Long userId, Feedback feedback) {
@@ -256,10 +294,28 @@ public class RelationService {
 
     public Response updateUser(UsersModel model) {
         Response response = new Response();
-        Optional<Users> users = userRepository.findById(model.getId());
         try {
+
+            if (model.getId() == null) {
+                response.errorResponse("id is required");
+                return response;
+            }
+
+            Optional<Users> users = userRepository.findById(model.getId());
             if (users.isPresent()) {
                 Users userToBeSaved = mapper.map(model, Users.class);
+                //TODO check if already mail and mobile is present.. if diff email or mobile number found.
+                Users userMailChk = userRepository.findByEmail(userToBeSaved.getEmail());
+                Users userMobileChk = userRepository.findByMobile(userToBeSaved.getMobile());
+                if (userMailChk != null && !users.get().getEmail().equals(model.getEmail())) {
+                    response.errorResponse("Email is already registered with diff account..!");
+                    return response;
+                }
+                if (userMobileChk != null && !users.get().getMobile().equals(model.getMobile())) {
+                    response.errorResponse("Mobile is already registered with diff account..!");
+                    return response;
+                }
+
                 userToBeSaved.setId(users.get().getId());
                 userRepository.save(userToBeSaved);
                 response.successResponse("successfully saved", userToBeSaved);

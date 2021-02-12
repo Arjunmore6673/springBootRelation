@@ -24,7 +24,13 @@ public class RelationController {
 
     @GetMapping(GlobalConstant.GET_USER_WITH_RELATION)
     public Response getUserRelations(@CurrentUser JwtUserDetails jwtUserDetails) {
-        return relationService.getUserRelations(jwtUserDetails.getId());
+        Response response = new Response();
+        try{
+            return relationService.getUserRelations(jwtUserDetails.getId());
+        } catch (Exception e){
+            response.errorResponse("Something went wrong " + e);
+            return response;
+        }
     }
 
     @PostMapping(GlobalConstant.ADD_USER_RELATION)

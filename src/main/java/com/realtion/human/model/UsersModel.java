@@ -1,5 +1,7 @@
 package com.realtion.human.model;
 
+import org.springframework.beans.factory.annotation.Required;
+
 import java.util.Date;
 import java.util.Objects;
 

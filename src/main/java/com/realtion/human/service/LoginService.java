@@ -2,6 +2,7 @@ package com.realtion.human.service;
 
 import com.realtion.human.config.Constants;
 import com.realtion.human.entity.Users;
+import com.realtion.human.model.Response;
 import com.realtion.human.model.UsersModel;
 import com.realtion.human.model.jwt.JwtUser;
 import com.realtion.human.repository.UserRepository;
@@ -35,7 +36,8 @@ public class LoginService {
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<HashMap<String, Object>> getToken(String username, String password) {
+    public Response getToken(String username, String password) {
+        Response response = new Response();
         HashMap<String, Object> tokenMap = new HashMap<>();
         ModelMapper mapper = new ModelMapper();
         Users user = userRepository.findByEmailOrMobile(username, username);
@@ -44,7 +46,8 @@ public class LoginService {
                 System.out.println("BLOCKED");
                 throw new UserAuthenticationException("user is blocker", "EX_CU_1200", "E", HttpStatus.OK);
             } else if (user.getStatus() == null) {
-                throw new UserAuthenticationException("user status is empty", "EX_CU_1201", "E", HttpStatus.OK);
+                response.errorResponse("user status is empty");
+                return response;
             }
             if (passwordEncoder.matches(password, user.getPassword())) {
                 JwtUser jwtUser = new JwtUser();
@@ -54,12 +57,15 @@ public class LoginService {
                 String token = jwtGenerator.generate(jwtUser);
                 tokenMap.put("token", token);
                 tokenMap.put("user", mapper.map(user, UsersModel.class));
-                return ResponseEntity.ok().body(tokenMap);
+                response.successResponse(tokenMap);
             } else {
-                throw new UnauthorisedRequestException(messageSource.getMessage("invalid.password", null, LocaleContextHolder.getLocale()));
+                response.errorResponse("Given password is Invalid..!");
             }
+            return response;
+
         } else {
-            throw new UserNotFoundException(messageSource.getMessage("unknown.user", null, LocaleContextHolder.getLocale()) + username);
+            response.errorResponse("User not found..!");
+            return response;
         }
 
     }

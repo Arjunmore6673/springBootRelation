@@ -10,7 +10,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
+
+import java.util.Locale;
 
 @EntityScan("com.realtion.human.entity")
 @EnableJpaRepositories(basePackages = {"com.realtion.human.repository"})
@@ -45,6 +52,11 @@ public class HumanApplication {
         return new ModelMapper();
     }
 
-
+    @Bean
+    public LocaleResolver localeResolver() {
+        AcceptHeaderLocaleResolver localResolver = new AcceptHeaderLocaleResolver();
+        localResolver.setDefaultLocale(Locale.US);
+        return localResolver;
+    }
 
 }

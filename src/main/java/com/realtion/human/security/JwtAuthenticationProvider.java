@@ -26,7 +26,8 @@ public class JwtAuthenticationProvider extends AbstractUserDetailsAuthentication
 	MessageSource messageSource;
 
 	@Override
-	protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws AuthenticationException {
+	protected void additionalAuthenticationChecks(UserDetails userDetails,
+												  UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws AuthenticationException {
 
 	}
 
@@ -47,7 +48,7 @@ public class JwtAuthenticationProvider extends AbstractUserDetailsAuthentication
 		JwtUser jwtUser = validator.validate(token);
 
 		if (jwtUser == null) {
-			throw new RuntimeException(messageSource.getMessage("token.incorrect",null, LocaleContextHolder.getLocale()));
+			throw new RuntimeException("token.incorrect");
 		}
 
 		List<GrantedAuthority> grantedAuthorities = AuthorityUtils
