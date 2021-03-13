@@ -1,6 +1,7 @@
 package com.realtion.human.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 
@@ -21,7 +22,6 @@ public class Users implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @Column
     private String image;
 
     @Column(unique = true)
@@ -30,35 +30,27 @@ public class Users implements Serializable {
     @Email
     private String email;
 
-    @Column
+    @NotNull
     private String password;
 
-    @Column
     private String status;
 
     @NotNull
-    @Column
     private String name;
 
     @NotNull
-    @Column
     private String gender;
 
     @Past
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Column
     private Date dob;
 
-    @Column
     private String address;
 
-    @Column
     private String code;
 
-    @Column
     private String firebaseId;
 
-    @Column
     private String firebaseToken;
 
 

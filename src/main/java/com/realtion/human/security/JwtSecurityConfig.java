@@ -1,4 +1,4 @@
-package com.realtion.human.config;
+package com.realtion.human.security;
 
 import com.realtion.human.security.JwtAuthenticationEntryPoint;
 import com.realtion.human.security.JwtAuthenticationProvider;

@@ -30,13 +30,8 @@ public class RegisterController {
 
     @PostMapping(GlobalConstant.LOGIN)
     Response login(@Valid @RequestBody LoginForm loginForm) {
-        try {
-            return loginService.getToken(loginForm.getUsername(), loginForm.getPassword());
-        } catch (Exception e) {
-            Response response = new Response();
-            response.errorResponse("Something went wrong");
-            return response;
-        }
+        return loginService.getToken(loginForm.getUsername(), loginForm.getPassword());
+
     }
 
 

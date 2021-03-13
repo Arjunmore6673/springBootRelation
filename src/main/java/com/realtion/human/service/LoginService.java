@@ -2,20 +2,17 @@ package com.realtion.human.service;
 
 import com.realtion.human.config.Constants;
 import com.realtion.human.entity.Users;
+import com.realtion.human.exception.UserNotFoundException;
 import com.realtion.human.model.Response;
 import com.realtion.human.model.UsersModel;
 import com.realtion.human.model.jwt.JwtUser;
 import com.realtion.human.repository.UserRepository;
 import com.realtion.human.security.JwtGenerator;
-import exception.UnauthorisedRequestException;
 import exception.UserAuthenticationException;
-import exception.UserNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,10 +28,12 @@ public class LoginService {
     MessageSource messageSource;
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
-    @Autowired
-    JwtGenerator jwtGenerator;
+
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    JwtGenerator jwtGenerator;
 
     public Response getToken(String username, String password) {
         Response response = new Response();
@@ -55,17 +54,19 @@ public class LoginService {
                 jwtUser.setUsername(username);
                 jwtUser.setStatus(user.getStatus());
                 String token = jwtGenerator.generate(jwtUser);
+                if (token == null){
+                    throw new UserNotFoundException("token is invalid");
+                }
                 tokenMap.put("token", token);
                 tokenMap.put("user", mapper.map(user, UsersModel.class));
                 response.successResponse(tokenMap);
             } else {
-                response.errorResponse("Given password is Invalid..!");
+                throw new UserNotFoundException("Given password is Invalid..!");
             }
             return response;
 
         } else {
-            response.errorResponse("User not found..!");
-            return response;
+            throw new UserNotFoundException("user not found");
         }
 
     }

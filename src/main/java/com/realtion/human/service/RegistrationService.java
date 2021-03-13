@@ -2,10 +2,12 @@ package com.realtion.human.service;
 
 import com.realtion.human.config.Constants;
 import com.realtion.human.entity.Users;
+import com.realtion.human.exception.RelativeException;
 import com.realtion.human.model.Response;
 import com.realtion.human.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -39,7 +41,7 @@ public class RegistrationService {
      */
     @Transactional
     public Response register(Users users) {
-        try {
+        try{
             Users user = userRepository.findByEmailOrMobile(users.getEmail(), users.getMobile());
             if (user != null && user.getStatus().equals("ACTIVE") && user.getPassword().length() > 0) {
                 response.errorResponse("user is already registered");
@@ -57,10 +59,10 @@ public class RegistrationService {
             users.setDob(new Date());
             Users userSaved = userRepository.save(users);
             response.successResponse("user registered successfully", userSaved.getId());
-        } catch (Exception e) {
-            response.errorResponse("something went wrong " + e);
+            return response;
+        }catch (Exception e){
+            throw new RelativeException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return response;
     }
 
     private String getCode(String code) {

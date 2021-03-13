@@ -12,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class JwtAuthenticationProvider extends AbstractUserDetailsAuthentication
 		JwtUser jwtUser = validator.validate(token);
 
 		if (jwtUser == null) {
-			throw new RuntimeException("token.incorrect");
+			throw new UsernameNotFoundException("token.incorrect");
 		}
 
 		List<GrantedAuthority> grantedAuthorities = AuthorityUtils
