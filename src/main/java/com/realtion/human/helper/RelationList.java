@@ -39,7 +39,10 @@ public enum RelationList {
 
     DAJI("DAJI"),
     SASRE("SASRE"),
-    SASU("SASU");
+    SASU("SASU"),
+
+    BHAUJI("BHAUJI"),
+    BHAUJI1("BHAUJI1");
 
 
     private String value;

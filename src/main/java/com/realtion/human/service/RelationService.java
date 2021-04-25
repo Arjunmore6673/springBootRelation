@@ -3,6 +3,7 @@ package com.realtion.human.service;
 import com.realtion.human.entity.Feedback;
 import com.realtion.human.entity.UserRelation;
 import com.realtion.human.entity.Users;
+import com.realtion.human.exception.UserNotFoundException;
 import com.realtion.human.helper.RelationList;
 import com.realtion.human.imple.RelationDaoImpl;
 import com.realtion.human.model.*;
@@ -13,12 +14,15 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import javax.management.relation.RelationException;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, noRollbackFor = Exception.class)
@@ -121,8 +125,10 @@ public class RelationService {
         Response response = new Response();
         Optional<Users> users = userRepository.findById(otherId == null ? userId : otherId);
         if (users.isPresent()) {
-            List<UserRelation> userRelations = userRelationRepository.findAllByUsersId(users.get().getId());
-            List<UserRelation> yourRelationAddedByOther = userRelationRepository.findAllByUsers2Id(users.get().getId());
+            List<UserRelation> userRelations = new ArrayList<>();
+            userRelations = userRelationRepository.findAllByUsersId(users.get().getId());
+            List<UserRelation> yourRelationAddedByOther = new ArrayList<>();
+            yourRelationAddedByOther = userRelationRepository.findAllByUsers2Id(users.get().getId());
             List<UsersModel> userRelatives = getRelationListHelper(userRelations, 1);
             List<UsersModel> yourRelativesOther = getRelationListHelper(yourRelationAddedByOther, 2);
             List<UsersModel> convertedList = yourRelativesOther.stream().peek((obj) -> {
@@ -176,13 +182,9 @@ public class RelationService {
             opposite = gender.equals("MALE") ? RelationList.MULGA.getValue() : RelationList.MULGI.getValue();
         } else if (RelationList.PAPAA.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.MULGA.getValue() : RelationList.MULGI.getValue();
-        }
-        // MULGA MULGI
-        else if (RelationList.MULGA.getValue().equals(relation) || RelationList.MULGI.getValue().equals(relation)) {
+        } else if (RelationList.MULGA.getValue().equals(relation) || RelationList.MULGI.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.PAPAA.getValue() : RelationList.AAI.getValue();
-        }
-        //bhavu, bahin
-        else if (RelationList.BHAVU.getValue().equals(relation) || RelationList.BAHIN.getValue().equals(relation)) {
+        } else if (RelationList.BHAVU.getValue().equals(relation) || RelationList.BAHIN.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.BHAVU.getValue() : RelationList.BAHIN.getValue();
         } else if (RelationList.AAJI.getValue().equals(relation) || RelationList.AJOBA.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.NATU.getValue() : RelationList.NAT.getValue();
@@ -194,6 +196,12 @@ public class RelationService {
             opposite = gender.equals("MALE") ? RelationList.BHACHA.getValue() : RelationList.BHACHI.getValue();
         } else if (RelationList.BHACHA.getValue().equals(relation) || RelationList.BHACHI.getValue().equals(relation)) {
             opposite = gender.equals("MALE") ? RelationList.MAMA.getValue() : RelationList.MAMI.getValue();
+        } else if (RelationList.DAJI.getValue().equals(relation)) {
+            opposite = gender.equals("MALE") ? RelationList.MEHVNA.getValue() : RelationList.MEHVNI.getValue();
+        } else if (RelationList.MAVSHI.getValue().equals(relation)) {
+            opposite = gender.equals("MALE") ? RelationList.MULGA.getValue() : RelationList.MULGI.getValue();
+        } else if (RelationList.VAHINI.getValue().equals(relation)) {
+            opposite = gender.equals("MALE") ? RelationList.BHAUJI.getValue() : RelationList.NANAND.getValue();
         } else {
             opposite = name + " added above person's relation as " + "'" + relation + "'";
         }
@@ -204,8 +212,9 @@ public class RelationService {
      * @param userId userId
      * @param model  model simple user with relation
      * @return success or 12/4/2020
+     * @throws RelationException
      */
-    public Response addUserAndRelation(Long userId, RelationUserModel model) {
+    public Response addUserAndRelation(Long userId, RelationUserModel model) throws RelationException {
         Response response = new Response();
         Optional<Users> users = userRepository.findById(userId);
         try {
@@ -258,11 +267,11 @@ public class RelationService {
                 response.successResponse("successfully saved relation", "");
             } else {
                 response.errorResponse("user not found");
+                throw new UserNotFoundException("user not found");
             }
             return response;
         } catch (Exception e) {
-            response.errorResponse("Something went wrong..! + " + e);
-            return response;
+            throw new RelationException("something went wrong " + e.toString());
         }
     }
 

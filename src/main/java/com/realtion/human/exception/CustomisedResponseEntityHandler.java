@@ -6,11 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @ControllerAdvice /// it will add it to all the controllers.
@@ -53,8 +57,9 @@ public class CustomisedResponseEntityHandler extends ResponseEntityExceptionHand
 	public final ResponseEntity<Object> customException(RelativeException ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
 				request.getDescription(false),ex.getResponseStatus());
-		return new ResponseEntity(exceptionResponse, ex.getResponseStatus());
+		return new ResponseEntity<Object>(exceptionResponse, ex.getResponseStatus());
 	}
 
+	
 
 }
