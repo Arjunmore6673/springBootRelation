@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
 public interface FeedbackRepository extends CrudRepository<Feedback, Long> {
 
     Feedback findByUserId(Long userId);
-
 }
